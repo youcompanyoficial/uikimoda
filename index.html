@@ -5,8 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Calculadora Shopee — Precificação</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-<!-- SUPABASE SDK -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- sem SDK externo — usa REST direto -->
 <style>
   :root {
     --bg: #0d0d0d;
@@ -789,14 +788,55 @@
 
 <script>
   // ============================================================
-  // SUPABASE CONFIG
+  // SUPABASE — REST API DIRETA (sem SDK, sem CORS issues)
   // ============================================================
-  const SUPABASE_URL = 'https://uvgspomojfcrvfiqsot.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV2Z3Nwb21vanRjZnJ2Zmlxc290Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY2MTgxMDQsImV4cCI6MjA5MjE5NDEwNH0.EmZTLCApMT0AAHZAOn40mVUl3BWK8SillokW7FOEuaA';
-  const TABLE_NAME = 'produtos'; // nome da tabela no Supabase
+  const SUPABASE_URL  = 'https://uvgspomojfcrvfiqsot.supabase.co';
+  const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV2Z3Nwb21vanRjZnJ2Zmlxc290Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY2MTgxMDQsImV4cCI6MjA5MjE5NDEwNH0.EmZTLCApMT0AAHZAOn40mVUl3BWK8SillokW7FOEuaA';
+  const TABLE_NAME    = 'produtos';
+  const BASE_URL      = `${SUPABASE_URL}/rest/v1/${TABLE_NAME}`;
 
-  const { createClient } = supabase;
-  const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const HEADERS = {
+    'apikey':        SUPABASE_KEY,
+    'Authorization': `Bearer ${SUPABASE_KEY}`,
+    'Content-Type':  'application/json',
+    'Prefer':        'return=representation',
+  };
+
+  // ── helpers REST ─────────────────────────────────────────────
+  async function sbSelect(query = '') {
+    const res = await fetch(`${BASE_URL}?${query}&order=created_at.desc`, {
+      method: 'GET', headers: HEADERS,
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ message: res.statusText }));
+      throw new Error(err.message || res.statusText);
+    }
+    return res.json();
+  }
+
+  async function sbInsert(payload) {
+    const res = await fetch(BASE_URL, {
+      method: 'POST',
+      headers: HEADERS,
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ message: res.statusText }));
+      throw new Error(err.message || res.statusText);
+    }
+    return res.json();
+  }
+
+  async function sbDelete(id) {
+    const res = await fetch(`${BASE_URL}?id=eq.${id}`, {
+      method: 'DELETE', headers: HEADERS,
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ message: res.statusText }));
+      throw new Error(err.message || res.statusText);
+    }
+    return true;
+  }
 
   // ============================================================
   // TOAST SYSTEM
@@ -834,8 +874,7 @@
 
   async function testConnection() {
     try {
-      const { error } = await db.from(TABLE_NAME).select('id').limit(1);
-      if (error) throw error;
+      await sbSelect('select=id&limit=1');
       setStatus('connected', 'Supabase conectado');
     } catch (e) {
       setStatus('error', 'Erro de conexão');
@@ -996,33 +1035,23 @@
     btn.disabled = true;
 
     try {
-      // Monta o objeto com as colunas da tabela Supabase
       const payload = {
-        nome_item: nome,
-        custo_produto: parseFloat(r.prod.toFixed(2)),
-        embalagem_acrescimos: parseFloat(r.pack.toFixed(2)),
-        taxa_plataforma: parseFloat(r.taxaValor.toFixed(2)),
-        impostos_percentual: parseFloat((r.impostoRate * 100).toFixed(2)),
+        nome_item:              nome,
+        custo_produto:          parseFloat(r.prod.toFixed(2)),
+        embalagem_acrescimos:   parseFloat(r.pack.toFixed(2)),
+        taxa_plataforma:        parseFloat(r.taxaValor.toFixed(2)),
+        impostos_percentual:    parseFloat((r.impostoRate * 100).toFixed(2)),
         margem_lucro_percentual: parseFloat((r.margem * 100).toFixed(2)),
-        valor_final: parseFloat(r.precoFinal.toFixed(2)),
-        lucro_venda: parseFloat(r.lucroLiq.toFixed(2)),
-        foto_url: photoDataURL || null,
+        valor_final:            parseFloat(r.precoFinal.toFixed(2)),
+        lucro_venda:            parseFloat(r.lucroLiq.toFixed(2)),
+        foto_url:               photoDataURL || null,
       };
 
-      const { data, error } = await db
-        .from(TABLE_NAME)
-        .insert([payload])
-        .select();
-
-      if (error) throw error;
+      await sbInsert(payload);
 
       showToast('Produto salvo!', `"${nome}" foi salvo no Supabase com sucesso.`, 'success');
-
-      // Reseta campos
       document.getElementById('nome-produto').value = '';
       removePhoto();
-
-      // Recarrega lista
       await carregarProdutos();
       document.getElementById('produtos-section').scrollIntoView({ behavior: 'smooth' });
 
@@ -1047,16 +1076,9 @@
       </div>`;
 
     try {
-      const { data, error } = await db
-        .from(TABLE_NAME)
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-
+      const data = await sbSelect('select=*');
       produtos = data || [];
       renderProdutos();
-
     } catch (err) {
       console.error('Erro ao carregar:', err);
       grid.innerHTML = `
@@ -1075,8 +1097,7 @@
   async function deletarProduto(id) {
     if (!confirm('Remover este produto do Supabase?')) return;
     try {
-      const { error } = await db.from(TABLE_NAME).delete().eq('id', id);
-      if (error) throw error;
+      await sbDelete(id);
       showToast('Removido', 'Produto removido do Supabase.', 'success');
       await carregarProdutos();
     } catch (err) {
@@ -1193,25 +1214,11 @@
     if (e.target === document.getElementById('modal-overlay')) fecharModal();
   }
 
-  // ============================================================
-  // REALTIME SUBSCRIPTION (Supabase Realtime)
-  // ============================================================
+  // Polling a cada 30s como fallback (Realtime requer WebSocket/SDK)
   function setupRealtime() {
-    db.channel('produtos-changes')
-      .on('postgres_changes', { event: '*', schema: 'public', table: TABLE_NAME }, (payload) => {
-        console.log('Realtime event:', payload.eventType, payload);
-        carregarProdutos();
-        if (payload.eventType === 'INSERT') {
-          const nome = payload.new?.nome_item || 'Produto';
-          showToast('Novo produto detectado', `"${nome}" foi adicionado por outro usuário.`, 'info');
-        }
-      })
-      .subscribe((status) => {
-        console.log('Realtime status:', status);
-        if (status === 'SUBSCRIBED') {
-          setStatus('connected', 'Realtime ativo');
-        }
-      });
+    setInterval(() => {
+      carregarProdutos();
+    }, 30000);
   }
 
   // ============================================================
