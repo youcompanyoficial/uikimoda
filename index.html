@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Calculadora Shopee — Precificação</title>
@@ -858,7 +857,8 @@
         <button class="photo-remove" id="photo-remove-btn" onclick="removePhoto(event)">✕</button>
         <input type="file" id="photo-input" accept="image/*" onchange="onPhotoChange(event)">
       </div>
-        <button class="btn-salvar" onclick="salvarNoSupabase()">SALVAR DADOS</button>    </div>
+      <button class="btn-salvar" style="margin-top:12px" onclick="salvarProduto()">Salvar produto</button>
+    </div>
 
   </aside>
 
@@ -1190,64 +1190,5 @@
   calc();
   renderProdutos();
 </script>
-<script>
-  // Conexão com seu projeto Império DM Sexy no Supabase
-  const SUPABASE_URL = 'https://uvgspomojtcfrvfiqsot.supabase.co';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV2Z3Nwb21vanRjZnJ2Zmlxc290Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY2MTgxMDQsImV4cCI6MjA5MjE5NDEwNH0.EmZTLCApMT0AAHZAOn40mVUl3BWK8SillokW7FOEuaA';
-  const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-  async function salvarNoSupabase() {
-    const btn = document.querySelector('.btn-salvar'); // Ajuste o nome da classe se for diferente
-    const file = document.getElementById('input_foto').files[0];
-    const nome = document.getElementById('nome_produto').value;
-    const v_custo = document.getElementById('custo').value;
-    const v_venda = document.getElementById('venda').value;
-
-    if (!nome || !file) {
-      alert("⚠️ Informe o nome e adicione uma foto primeiro!");
-      return;
-    }
-
-    btn.innerText = "⏳ SALVANDO...";
-    btn.style.opacity = "0.5";
-
-    try {
-      // 1. Upload da Foto
-      const fileName = `${Date.now()}_${file.name}`;
-      const { data: uploadData, error: uploadError } = await supabase.storage
-        .from('produtos')
-        .upload(fileName, file);
-
-      if (uploadError) throw uploadError;
-
-      // 2. URL Pública
-      const { data: urlData } = supabase.storage.from('produtos').getPublicUrl(fileName);
-      const fotoUrl = urlData.publicUrl;
-
-     // 3. Salvar Dados na tabela 'calculos' com os nomes das suas colunas
-      const { error: dbError } = await supabase
-        .from('calculos')
-        .insert([{
-          nome_item: nome, 
-          custo_produto: parseFloat(v_custo),
-          valor_final: parseFloat(v_venda),
-          foto_url: fotoUrl,
-          created_at: new Date()
-        }]);
-
-      if (dbError) throw dbError;
-
-      alert("✅ Produto salvo com sucesso no banco de dados!");
-      btn.innerText = "SALVAR NO BANCO DE DADOS";
-      btn.style.opacity = "1";
-
-    } catch (err) {
-      console.error(err);
-      alert("❌ Erro: " + err.message);
-      btn.innerText = "TENTAR NOVAMENTE";
-      btn.style.opacity = "1";
-    }
-  }
-</script>  
 </body>
 </html>
