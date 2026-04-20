@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Calculadora Shopee — Precificação</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -1190,65 +1189,6 @@
 
   calc();
   renderProdutos();
-</script>// CONFIGURAÇÃO DO BANCO DE DADOS
-const SUPABASE_URL = 'https://uvgspomojtcfrvfiqsot.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV2Z3Nwb21ovanRjZnJ2Zmlxc290Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY2MTgxMDQsImV4cCI6MjA5MjE5NDEwNH0.EmZTLCApMT0AAHZAOn40mVUl3BWK8SillokW7FOEuaA';
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-async function salvarProduto() {
-    // 1. Pega os dados dos campos existentes no seu HTML
-    const nome = document.querySelector('.nome-input').value;
-    const custo = document.getElementById('custo').value;
-    const venda = document.getElementById('venda-final-manual').innerText.replace('R$ ', '').replace('.', '').replace(',', '.');
-    const fotoFile = document.getElementById('foto-input').files[0];
-
-    // Validação simples
-    if (!nome || !fotoFile) {
-        alert("Por favor, preencha o nome e selecione uma foto!");
-        return;
-    }
-
-    // Feedback no botão
-    const btn = document.querySelector('.btn-salvar');
-    const textoOriginal = btn.innerText;
-    btn.innerText = "Salvando...";
-    btn.disabled = true;
-
-    try {
-        // 2. Faz o upload da imagem para o Storage
-        const nomeArquivo = `${Date.now()}_${fotoFile.name}`;
-        const { data: uploadData, error: uploadError } = await supabaseClient.storage
-            .from('produtos')
-            .upload(nomeArquivo, fotoFile);
-
-        if (uploadError) throw uploadError;
-
-        // 3. Pega a URL pública da imagem
-        const { data: urlData } = supabaseClient.storage.from('produtos').getPublicUrl(nomeArquivo);
-        const fotoUrl = urlData.publicUrl;
-
-        // 4. Salva as informações na tabela 'calculos'
-        const { error: dbError } = await supabaseClient
-            .from('calculos')
-            .insert([{
-                nome_item: nome,
-                custo_produto: parseFloat(custo),
-                valor_final: parseFloat(venda),
-                foto_url: fotoUrl
-            }]);
-
-        if (dbError) throw dbError;
-
-        alert("Produto salvo com sucesso!");
-        location.reload(); // Recarrega para limpar os campos
-
-    } catch (error) {
-        console.error(error);
-        alert("Erro ao salvar: " + error.message);
-    } finally {
-        btn.innerText = textoOriginal;
-        btn.disabled = false;
-    }
-}
+</script>
 </body>
 </html>
