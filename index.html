@@ -253,8 +253,8 @@
     <div>
       <p class="section-label">Custos de produção</p>
       <div class="input-group" id="prod-costs">
-        <div class="input-row"><label>Custo do produto</label><span class="currency">R$</span><input type="number" min="0" step="0.01" value="25" oninput="calc()"></div>
-        <div class="input-row"><label>Mão de obra</label><span class="currency">R$</span><input type="number" min="0" step="0.01" value="30" oninput="calc()"></div>
+        <div class="input-row"><label>Custo do produto</label><span class="currency">R$</span><input type="number" min="0" step="0.01" value="0" oninput="calc()"></div>
+        <div class="input-row"><label>Mão de obra</label><span class="currency">R$</span><input type="number" min="0" step="0.01" value="0" oninput="calc()"></div>
       </div>
       <button class="btn-add" style="margin-top:8px;width:100%" onclick="addRow('prod-costs')">+ Adicionar custo de produção</button>
     </div>
@@ -262,8 +262,8 @@
     <div>
       <p class="section-label">Embalagem &amp; acréscimos</p>
       <div class="input-group" id="pack-costs">
-        <div class="input-row"><label>Embalagem / sacola</label><span class="currency">R$</span><input type="number" min="0" step="0.01" value="3" oninput="calc()"></div>
-        <div class="input-row"><label>Etiqueta / tag</label><span class="currency">R$</span><input type="number" min="0" step="0.01" value="1" oninput="calc()"></div>
+        <div class="input-row"><label>Embalagem / sacola</label><span class="currency">R$</span><input type="number" min="0" step="0.01" value="0" oninput="calc()"></div>
+        <div class="input-row"><label>Etiqueta / tag</label><span class="currency">R$</span><input type="number" min="0" step="0.01" value="0" oninput="calc()"></div>
       </div>
       <button class="btn-add" style="margin-top:8px;width:100%" onclick="addRow('pack-costs')">+ Adicionar embalagem</button>
     </div>
@@ -276,12 +276,12 @@
     <div>
       <p class="section-label">Margem de lucro desejada</p>
       <div class="slider-wrap">
-        <input type="range" min="1" max="200" step="1" id="margin-slider" value="20" oninput="syncMargin('slider')">
-        <span class="slider-val" id="slider-display">20%</span>
+        <input type="range" min="1" max="200" step="1" id="margin-slider" value="0" oninput="syncMargin('slider')">
+        <span class="slider-val" id="slider-display">0%</span>
       </div>
       <div class="input-row" style="margin-top:8px">
         <label>Margem personalizada</label>
-        <input type="number" id="margin-input" min="1" step="1" value="20" oninput="syncMargin('input')">
+        <input type="number" id="margin-input" min="1" step="1" value="0" oninput="syncMargin('input')">
         <span class="currency">%</span>
       </div>
     </div>
