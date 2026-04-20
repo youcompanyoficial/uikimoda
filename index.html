@@ -3,420 +3,140 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Calculadora Shopee — Precificação</title>
+<title>ID Company — Precificador Shopee</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-<!-- sem SDK externo — usa REST direto -->
 <style>
   :root {
-    --bg: #0d0d0d;
-    --surface: #141414;
-    --surface2: #1c1c1c;
-    --border: #2a2a2a;
-    --border2: #333;
-    --orange: #EE4D2D;
-    --orange-dim: rgba(238,77,45,0.12);
-    --orange-mid: rgba(238,77,45,0.25);
-    --text: #f0ede8;
-    --text-muted: #888;
-    --text-dim: #555;
-    --green: #4ade80;
-    --green-dim: rgba(74,222,128,0.10);
-    --yellow: #f59e0b;
-    --yellow-dim: rgba(245,158,11,0.10);
-    --blue: #60a5fa;
-    --blue-dim: rgba(96,165,250,0.12);
-    --radius: 14px;
-    --radius-sm: 8px;
+    --bg: #0d0d0d; --surface: #141414; --surface2: #1c1c1c;
+    --border: #2a2a2a; --border2: #333;
+    --orange: #EE4D2D; --orange-dim: rgba(238,77,45,0.12); --orange-mid: rgba(238,77,45,0.25);
+    --text: #f0ede8; --text-muted: #888; --text-dim: #555;
+    --green: #4ade80; --green-dim: rgba(74,222,128,0.10);
+    --yellow: #f59e0b; --yellow-dim: rgba(245,158,11,0.10);
+    --blue: #60a5fa; --blue-dim: rgba(96,165,250,0.12);
+    --radius: 14px; --radius-sm: 8px;
   }
-
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    min-height: 100vh;
-    padding: 0;
-    overflow-x: hidden;
-  }
+  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; overflow-x: hidden; }
 
   /* HEADER */
   header {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    padding: 18px 40px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: sticky;
-    top: 0;
-    z-index: 100;
+    background: var(--surface); border-bottom: 1px solid var(--border);
+    padding: 18px 40px; display: flex; align-items: center;
+    justify-content: space-between; position: sticky; top: 0; z-index: 100;
   }
-
   .logo { display: flex; align-items: center; gap: 12px; }
-
-  .logo-icon {
-    width: 44px; height: 44px;
-    border-radius: 10px; overflow: hidden;
-    display: flex; align-items: center; justify-content: center;
-    background: var(--orange-dim);
-    border: 1px solid var(--orange-mid);
-    font-size: 22px;
-  }
-
-  .logo-text {
-    font-family: 'Syne', sans-serif;
-    font-weight: 700; font-size: 17px;
-    color: var(--text); letter-spacing: -0.3px;
-  }
-
-  .logo-sub {
-    font-size: 11px; color: var(--text-muted);
-    font-weight: 300; letter-spacing: 0.05em;
-    text-transform: uppercase;
-  }
-
+  .logo-icon { width: 44px; height: 44px; border-radius: 10px; overflow: hidden; display: flex; align-items: center; justify-content: center; background: transparent; }
+  .logo-icon img { width: 44px; height: 44px; object-fit: contain; border-radius: 10px; }
+  .logo-text { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 17px; color: var(--text); letter-spacing: -0.3px; }
+  .logo-sub { font-size: 11px; color: var(--text-muted); font-weight: 300; letter-spacing: 0.05em; text-transform: uppercase; }
   .header-right { display: flex; align-items: center; gap: 12px; }
-
-  .badge-shopee {
-    background: var(--orange-dim);
-    border: 1px solid var(--orange-mid);
-    color: var(--orange);
-    font-size: 12px; font-weight: 500;
-    padding: 5px 14px; border-radius: 20px;
-    font-family: 'DM Mono', monospace;
-    letter-spacing: 0.03em;
-  }
-
-  /* SUPABASE STATUS BADGE */
-  .supabase-status {
-    display: flex; align-items: center; gap: 6px;
-    font-size: 11px; font-family: 'DM Mono', monospace;
-    padding: 5px 12px; border-radius: 20px;
-    border: 1px solid var(--border2);
-    color: var(--text-dim);
-    transition: all 0.3s;
-  }
-  .supabase-status.connected {
-    background: var(--green-dim);
-    border-color: rgba(74,222,128,0.3);
-    color: var(--green);
-  }
-  .supabase-status.error {
-    background: rgba(248,113,113,0.1);
-    border-color: rgba(248,113,113,0.3);
-    color: #f87171;
-  }
-  .status-dot {
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: currentColor;
-  }
+  .badge-shopee { background: var(--orange-dim); border: 1px solid var(--orange-mid); color: var(--orange); font-size: 12px; font-weight: 500; padding: 5px 14px; border-radius: 20px; font-family: 'DM Mono', monospace; }
+  .supabase-status { display: flex; align-items: center; gap: 6px; font-size: 11px; font-family: 'DM Mono', monospace; padding: 5px 12px; border-radius: 20px; border: 1px solid var(--border2); color: var(--text-dim); transition: all 0.3s; }
+  .supabase-status.connected { background: var(--green-dim); border-color: rgba(74,222,128,0.3); color: var(--green); }
+  .supabase-status.error { background: rgba(248,113,113,0.1); border-color: rgba(248,113,113,0.3); color: #f87171; }
+  .status-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
   .status-dot.pulse { animation: pulse 1.5s infinite; }
 
   /* LAYOUT */
-  .main {
-    display: grid;
-    grid-template-columns: 380px 1fr;
-    gap: 0;
-    min-height: calc(100vh - 73px);
-  }
-
-  /* LEFT PANEL */
-  .panel-left {
-    background: var(--surface);
-    border-right: 1px solid var(--border);
-    padding: 32px 28px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-  }
-
-  .section-label {
-    font-size: 10px; font-weight: 500;
-    letter-spacing: 0.12em; text-transform: uppercase;
-    color: var(--text-dim); margin-bottom: 12px;
-  }
+  .main { display: grid; grid-template-columns: 380px 1fr; min-height: calc(100vh - 73px); }
+  .panel-left { background: var(--surface); border-right: 1px solid var(--border); padding: 32px 28px; overflow-y: auto; display: flex; flex-direction: column; gap: 24px; }
+  .section-label { font-size: 10px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 12px; }
 
   /* INPUTS */
   .input-group { display: flex; flex-direction: column; gap: 8px; }
-
-  .input-row {
-    display: flex; align-items: center; gap: 10px;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 0 12px;
-    transition: border-color 0.2s;
-  }
-
+  .input-row { display: flex; align-items: center; gap: 10px; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0 12px; transition: border-color 0.2s; }
   .input-row:focus-within { border-color: var(--orange); }
+  .input-row label { font-size: 12px; color: var(--text-muted); flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .input-row .currency { font-size: 12px; color: var(--text-dim); font-family: 'DM Mono', monospace; }
+  .input-row input[type=number] { background: transparent; border: none; outline: none; font-family: 'DM Mono', monospace; font-size: 14px; color: var(--text); text-align: right; width: 80px; padding: 11px 0; }
+  input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; }
+  input[type=text] { background: transparent; border: none; outline: none; font-family: 'DM Sans', sans-serif; font-size: 12px; color: var(--text-muted); flex: 1; min-width: 0; }
+  input[type=text]::placeholder { color: var(--text-dim); }
 
-  .input-row label {
-    font-size: 12px; color: var(--text-muted);
-    flex: 1; white-space: nowrap;
-    overflow: hidden; text-overflow: ellipsis;
-  }
-
-  .input-row .currency {
-    font-size: 12px; color: var(--text-dim);
-    font-family: 'DM Mono', monospace;
-  }
-
-  .input-row input[type=number] {
-    background: transparent; border: none; outline: none;
-    font-family: 'DM Mono', monospace;
-    font-size: 14px; color: var(--text);
-    text-align: right; width: 80px; padding: 11px 0;
-  }
-
-  input[type=number]::-webkit-inner-spin-button,
-  input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; }
-
-  .btn-add {
-    background: transparent;
-    border: 1px dashed var(--border2);
-    color: var(--text-dim); font-size: 12px;
-    border-radius: var(--radius-sm); padding: 8px 14px;
-    cursor: pointer; transition: all 0.2s;
-    font-family: 'DM Sans', sans-serif; text-align: left;
-  }
+  .btn-add { background: transparent; border: 1px dashed var(--border2); color: var(--text-dim); font-size: 12px; border-radius: var(--radius-sm); padding: 8px 14px; cursor: pointer; transition: all 0.2s; font-family: 'DM Sans', sans-serif; text-align: left; }
   .btn-add:hover { border-color: var(--orange); color: var(--orange); }
-
-  .btn-remove {
-    background: transparent; border: none;
-    color: var(--text-dim); cursor: pointer;
-    font-size: 14px; line-height: 1;
-    transition: color 0.2s; padding: 2px 4px;
-  }
+  .btn-remove { background: transparent; border: none; color: var(--text-dim); cursor: pointer; font-size: 14px; line-height: 1; transition: color 0.2s; padding: 2px 4px; }
   .btn-remove:hover { color: #f87171; }
 
   /* SLIDER */
   .slider-wrap { display: flex; align-items: center; gap: 12px; }
-
-  input[type=range] {
-    -webkit-appearance: none; flex: 1;
-    height: 4px; background: var(--border2);
-    border-radius: 2px; outline: none; cursor: pointer;
-  }
-
-  input[type=range]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 18px; height: 18px;
-    background: var(--orange); border-radius: 50%;
-    cursor: pointer; border: 3px solid var(--surface);
-    box-shadow: 0 0 0 1px var(--orange);
-    transition: transform 0.15s;
-  }
-
+  input[type=range] { -webkit-appearance: none; flex: 1; height: 4px; background: var(--border2); border-radius: 2px; outline: none; cursor: pointer; }
+  input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; background: var(--orange); border-radius: 50%; cursor: pointer; border: 3px solid var(--surface); box-shadow: 0 0 0 1px var(--orange); transition: transform 0.15s; }
   input[type=range]::-webkit-slider-thumb:active { transform: scale(1.2); }
+  .slider-val { font-family: 'DM Mono', monospace; font-size: 14px; color: var(--orange); min-width: 46px; text-align: right; }
 
-  .slider-val {
-    font-family: 'DM Mono', monospace;
-    font-size: 14px; color: var(--orange);
-    min-width: 46px; text-align: right;
-  }
-
-  /* TAXAS TABLE */
-  .taxa-card {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm); overflow: hidden;
-  }
-
-  .taxa-row {
-    display: flex; justify-content: space-between;
-    align-items: center; padding: 10px 14px;
-    border-bottom: 1px solid var(--border);
-    font-size: 12px; color: var(--text-muted);
-    transition: all 0.25s;
-  }
+  /* TAXAS */
+  .taxa-card { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; }
+  .taxa-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; border-bottom: 1px solid var(--border); font-size: 12px; color: var(--text-muted); transition: all 0.25s; }
   .taxa-row:last-child { border-bottom: none; }
-  .taxa-row.ativa { background: var(--orange-dim); color: var(--orange); border-color: transparent; }
+  .taxa-row.ativa { background: var(--orange-dim); color: var(--orange); }
   .taxa-row .taxa-val { font-family: 'DM Mono', monospace; font-weight: 500; }
   .taxa-row.ativa .taxa-val { color: var(--orange); }
 
   /* RIGHT PANEL */
   .panel-right { padding: 32px 36px; display: flex; flex-direction: column; gap: 24px; }
-
-  /* METRIC CARDS */
   .metrics-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
-
-  .metric-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius); padding: 20px 22px;
-    position: relative; overflow: hidden;
-    animation: fadeUp 0.4s ease both;
-  }
-
-  .metric-card::before {
-    content: ''; position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 2px; background: var(--border);
-    transition: background 0.3s;
-  }
+  .metric-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 22px; position: relative; overflow: hidden; animation: fadeUp 0.4s ease both; }
+  .metric-card::before { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: var(--border); }
   .metric-card.orange::before { background: var(--orange); }
   .metric-card.green::before { background: var(--green); }
   .metric-card.yellow::before { background: var(--yellow); }
-
-  .metric-label {
-    font-size: 11px; text-transform: uppercase;
-    letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 8px;
-  }
-
-  .metric-value {
-    font-family: 'Syne', sans-serif; font-weight: 700;
-    font-size: 28px; color: var(--text);
-    letter-spacing: -1px; line-height: 1;
-  }
+  .metric-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 8px; }
+  .metric-value { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 28px; letter-spacing: -1px; line-height: 1; }
   .metric-value.orange { color: var(--orange); }
   .metric-value.green { color: var(--green); }
   .metric-value.yellow { color: var(--yellow); }
   .metric-sub { font-size: 11px; color: var(--text-dim); margin-top: 6px; }
 
-  /* RESULT TABLE */
-  .result-box {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius); overflow: hidden;
-    animation: fadeUp 0.5s 0.1s ease both;
-  }
-
-  .result-box-header {
-    display: flex; justify-content: space-between;
-    padding: 14px 22px;
-    background: var(--surface2);
-    border-bottom: 1px solid var(--border);
-    font-size: 11px; font-weight: 500;
-    letter-spacing: 0.08em; text-transform: uppercase;
-    color: var(--text-muted);
-  }
-
-  .result-line {
-    display: flex; justify-content: space-between;
-    align-items: center; padding: 13px 22px;
-    border-bottom: 1px solid var(--border);
-    transition: background 0.2s;
-  }
+  /* RESULT BOX */
+  .result-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; animation: fadeUp 0.5s 0.1s ease both; }
+  .result-box-header { display: flex; justify-content: space-between; padding: 14px 22px; background: var(--surface2); border-bottom: 1px solid var(--border); font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); }
+  .result-line { display: flex; justify-content: space-between; align-items: center; padding: 13px 22px; border-bottom: 1px solid var(--border); transition: background 0.2s; }
   .result-line:hover { background: var(--surface2); }
   .result-line:last-child { border-bottom: none; }
   .result-line .rl-name { font-size: 13px; color: var(--text-muted); }
   .result-line .rl-val { font-family: 'DM Mono', monospace; font-size: 13px; color: var(--text); font-weight: 500; }
   .result-line.highlight-orange .rl-val { color: var(--orange); }
-  .result-line.highlight-green .rl-val { color: var(--green); }
-
   .result-totals { background: var(--surface2); border-top: 1px solid var(--border2); }
-
-  .result-total-row {
-    display: flex; justify-content: space-between;
-    align-items: center; padding: 16px 22px;
-    border-bottom: 1px solid var(--border);
-  }
+  .result-total-row { display: flex; justify-content: space-between; align-items: center; padding: 16px 22px; border-bottom: 1px solid var(--border); }
   .result-total-row:last-child { border-bottom: none; }
-  .rt-name { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 600; color: var(--text); }
+  .rt-name { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 600; }
   .rt-val { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
   .rt-val.orange { color: var(--orange); }
   .rt-val.green { color: var(--green); }
 
-  /* FAIXA ATIVA PILL */
-  .faixa-pill {
-    display: inline-flex; align-items: center; gap: 6px;
-    background: var(--orange-dim);
-    border: 1px solid var(--orange-mid);
-    color: var(--orange); font-size: 11px;
-    font-family: 'DM Mono', monospace;
-    padding: 4px 12px; border-radius: 20px; transition: all 0.3s;
-  }
+  .faixa-pill { display: inline-flex; align-items: center; gap: 6px; background: var(--orange-dim); border: 1px solid var(--orange-mid); color: var(--orange); font-size: 11px; font-family: 'DM Mono', monospace; padding: 4px 12px; border-radius: 20px; }
   .faixa-dot { width: 6px; height: 6px; background: var(--orange); border-radius: 50%; animation: pulse 1.5s infinite; }
 
-  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-  @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-  /* FOTO DO PRODUTO */
-  .photo-upload {
-    border: 1.5px dashed var(--border2);
-    border-radius: var(--radius-sm);
-    background: var(--surface2);
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    gap: 8px; cursor: pointer;
-    transition: border-color 0.2s, background 0.2s;
-    overflow: hidden; position: relative; min-height: 120px;
-  }
+  /* FOTO */
+  .photo-upload { border: 1.5px dashed var(--border2); border-radius: var(--radius-sm); background: var(--surface2); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; cursor: pointer; transition: border-color 0.2s; overflow: hidden; position: relative; min-height: 120px; }
   .photo-upload:hover { border-color: var(--orange); background: rgba(238,77,45,0.05); }
-  .photo-upload img { width: 100%; height: 160px; object-fit: cover; display: block; border-radius: var(--radius-sm); }
-  .photo-upload .photo-placeholder { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 20px; }
-  .photo-upload .photo-icon { font-size: 28px; opacity: 0.3; }
-  .photo-upload .photo-label { font-size: 11px; color: var(--text-dim); text-align: center; }
+  .photo-upload img { width: 100%; height: 160px; object-fit: cover; display: block; }
+  .photo-placeholder { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 20px; }
+  .photo-icon { font-size: 28px; opacity: 0.3; }
+  .photo-label { font-size: 11px; color: var(--text-dim); text-align: center; }
   .photo-upload input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
-  .photo-remove {
-    position: absolute; top: 8px; right: 8px;
-    background: rgba(0,0,0,0.7); border: none; color: #fff;
-    border-radius: 50%; width: 24px; height: 24px;
-    font-size: 12px; cursor: pointer; display: none;
-    align-items: center; justify-content: center; z-index: 2;
-  }
+  .photo-remove { position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.7); border: none; color: #fff; border-radius: 50%; width: 24px; height: 24px; font-size: 12px; cursor: pointer; display: none; align-items: center; justify-content: center; z-index: 2; }
   .photo-upload.has-img .photo-remove { display: flex; }
   .photo-upload.has-img .photo-placeholder { display: none; }
   .photo-upload.has-img input[type=file] { display: none; }
 
-  /* NOME INPUT */
-  .nome-input {
-    width: 100%; background: var(--surface2);
-    border: 1px solid var(--border); border-radius: var(--radius-sm);
-    padding: 10px 14px; font-family: 'DM Sans', sans-serif;
-    font-size: 14px; color: var(--text); outline: none;
-    transition: border-color 0.2s;
-  }
+  .nome-input { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 14px; font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--text); outline: none; transition: border-color 0.2s; }
   .nome-input:focus { border-color: var(--orange); }
   .nome-input::placeholder { color: var(--text-dim); }
 
-  /* BTN SALVAR */
-  .btn-salvar {
-    width: 100%; background: var(--orange); border: none;
-    color: #fff; font-family: 'Syne', sans-serif;
-    font-weight: 700; font-size: 14px;
-    letter-spacing: 0.02em; padding: 13px;
-    border-radius: var(--radius-sm); cursor: pointer;
-    transition: opacity 0.2s, transform 0.15s;
-    position: relative; overflow: hidden;
-  }
+  .btn-salvar { width: 100%; background: var(--orange); border: none; color: #fff; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 14px; padding: 13px; border-radius: var(--radius-sm); cursor: pointer; transition: opacity 0.2s, transform 0.15s; }
   .btn-salvar:hover { opacity: 0.88; }
   .btn-salvar:active { transform: scale(0.98); }
   .btn-salvar:disabled { opacity: 0.5; cursor: not-allowed; }
-
-  .btn-salvar .spinner {
-    display: none; width: 16px; height: 16px;
-    border: 2px solid rgba(255,255,255,0.3);
-    border-top-color: #fff;
-    border-radius: 50%; animation: spin 0.6s linear infinite;
-    margin: 0 auto;
-  }
+  .btn-salvar .spinner { display: none; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.6s linear infinite; margin: 0 auto; }
   .btn-salvar.loading .spinner { display: block; }
   .btn-salvar.loading .btn-text { display: none; }
 
-  @keyframes spin { to { transform: rotate(360deg); } }
-
   /* TOAST */
-  .toast-container {
-    position: fixed; bottom: 24px; right: 24px;
-    display: flex; flex-direction: column; gap: 8px;
-    z-index: 9999;
-  }
-
-  .toast {
-    background: var(--surface);
-    border: 1px solid var(--border2);
-    border-radius: var(--radius-sm);
-    padding: 12px 18px;
-    display: flex; align-items: center; gap: 10px;
-    font-size: 13px; color: var(--text);
-    animation: toastIn 0.3s ease;
-    min-width: 260px; max-width: 380px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-  }
+  .toast-container { position: fixed; bottom: 24px; right: 24px; display: flex; flex-direction: column; gap: 8px; z-index: 9999; }
+  .toast { background: var(--surface); border: 1px solid var(--border2); border-radius: var(--radius-sm); padding: 12px 18px; display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--text); animation: toastIn 0.3s ease; min-width: 260px; max-width: 380px; }
   .toast.success { border-color: rgba(74,222,128,0.3); }
   .toast.success .toast-icon { color: var(--green); }
   .toast.error { border-color: rgba(248,113,113,0.3); }
@@ -428,79 +148,35 @@
   .toast-title { font-weight: 600; font-size: 12px; margin-bottom: 2px; }
   .toast-body { font-size: 11px; color: var(--text-muted); }
 
-  @keyframes toastIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
-  @keyframes toastOut { from { opacity: 1; transform: translateX(0); } to { opacity: 0; transform: translateX(20px); } }
-
-  /* PRODUTOS SALVOS */
-  .produtos-section { padding: 32px 36px; border-top: 1px solid var(--border); background: var(--bg); }
+  /* PRODUTOS */
+  .produtos-section { padding: 32px 36px; border-top: 1px solid var(--border); }
   .produtos-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; margin-top: 14px; }
-
-  .produto-card {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: var(--radius); overflow: hidden; cursor: pointer;
-    transition: border-color 0.2s, transform 0.15s;
-    animation: fadeUp 0.3s ease both;
-  }
+  .produto-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; cursor: pointer; transition: border-color 0.2s, transform 0.15s; animation: fadeUp 0.3s ease both; }
   .produto-card:hover { border-color: var(--orange); transform: translateY(-2px); }
-  .produto-card-img {
-    width: 100%; height: 140px; object-fit: cover;
-    background: var(--surface2); display: flex;
-    align-items: center; justify-content: center;
-    color: var(--text-dim); font-size: 32px;
-  }
+  .produto-card-img { width: 100%; height: 140px; background: var(--surface2); display: flex; align-items: center; justify-content: center; color: var(--text-dim); font-size: 32px; }
   .produto-card-img img { width: 100%; height: 140px; object-fit: cover; display: block; }
   .produto-card-body { padding: 14px 16px; }
-  .produto-card-nome {
-    font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 600;
-    color: var(--text); margin-bottom: 8px;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  }
+  .produto-card-nome { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .produto-card-vals { display: flex; flex-direction: column; gap: 4px; }
   .produto-card-row { display: flex; justify-content: space-between; font-size: 11px; }
   .produto-card-row .pk-label { color: var(--text-dim); }
   .produto-card-row .pk-val { font-family: 'DM Mono', monospace; color: var(--text-muted); }
   .produto-card-row.destaque .pk-val { color: var(--orange); font-weight: 500; font-size: 13px; }
   .produto-card-row.lucro .pk-val { color: var(--green); }
-
   .produto-card-footer { display: flex; gap: 6px; padding: 10px 16px; border-top: 1px solid var(--border); }
-  .btn-card-action {
-    flex: 1; background: transparent; border: 1px solid var(--border2);
-    color: var(--text-muted); font-size: 11px; border-radius: 6px;
-    padding: 6px; cursor: pointer; transition: all 0.2s;
-    font-family: 'DM Sans', sans-serif;
-  }
+  .btn-card-action { flex: 1; background: transparent; border: 1px solid var(--border2); color: var(--text-muted); font-size: 11px; border-radius: 6px; padding: 6px; cursor: pointer; transition: all 0.2s; font-family: 'DM Sans', sans-serif; }
   .btn-card-action:hover { border-color: var(--orange); color: var(--orange); }
   .btn-card-action.del:hover { border-color: #f87171; color: #f87171; }
-
-  /* SOURCE BADGE */
-  .source-badge {
-    display: inline-flex; align-items: center; gap: 4px;
-    font-size: 9px; font-family: 'DM Mono', monospace;
-    padding: 2px 7px; border-radius: 10px;
-    margin-top: 6px;
-  }
-  .source-badge.cloud { background: var(--blue-dim); color: var(--blue); border: 1px solid rgba(96,165,250,0.2); }
-  .source-badge.local { background: var(--yellow-dim); color: var(--yellow); border: 1px solid rgba(245,158,11,0.2); }
+  .source-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 9px; font-family: 'DM Mono', monospace; padding: 2px 7px; border-radius: 10px; margin-top: 6px; background: var(--blue-dim); color: var(--blue); border: 1px solid rgba(96,165,250,0.2); }
 
   /* MODAL */
-  .modal-overlay {
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,0.75); z-index: 200;
-    display: none; align-items: center; justify-content: center; padding: 20px;
-  }
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 200; display: none; align-items: center; justify-content: center; padding: 20px; }
   .modal-overlay.open { display: flex; }
-  .modal-box {
-    background: var(--surface); border: 1px solid var(--border2);
-    border-radius: var(--radius); width: 100%; max-width: 480px;
-    overflow: hidden; animation: fadeUp 0.2s ease;
-  }
-  .modal-header {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 16px 22px; border-bottom: 1px solid var(--border);
-  }
+  .modal-box { background: var(--surface); border: 1px solid var(--border2); border-radius: var(--radius); width: 100%; max-width: 480px; overflow: hidden; animation: fadeUp 0.2s ease; }
+  .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 22px; border-bottom: 1px solid var(--border); }
   .modal-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 16px; }
   .modal-close { background: transparent; border: none; color: var(--text-dim); font-size: 18px; cursor: pointer; }
-  .modal-img { width: 100%; height: 200px; object-fit: cover; background: var(--surface2); display: flex; align-items: center; justify-content: center; font-size: 48px; color: var(--text-dim); }
+  .modal-img { width: 100%; height: 200px; background: var(--surface2); display: flex; align-items: center; justify-content: center; font-size: 48px; color: var(--text-dim); }
   .modal-img img { width: 100%; height: 200px; object-fit: cover; display: block; }
   .modal-body { padding: 20px 22px; display: flex; flex-direction: column; gap: 10px; }
   .modal-row { display: flex; justify-content: space-between; font-size: 13px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
@@ -510,37 +186,35 @@
   .modal-row.final .mv { color: var(--orange); font-size: 16px; font-family: 'Syne', sans-serif; font-weight: 700; }
   .modal-row.lucro .mv { color: var(--green); }
 
+  /* SETUP SUPABASE PANEL */
+  .setup-panel { background: rgba(248,113,113,0.06); border: 1px solid rgba(248,113,113,0.2); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 20px; display: none; }
+  .setup-panel.visible { display: block; }
+  .setup-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px; color: #f87171; margin-bottom: 10px; }
+  .setup-step { font-size: 12px; color: var(--text-muted); margin-bottom: 6px; padding-left: 4px; }
+  .setup-code { background: var(--surface2); border: 1px solid var(--border2); border-radius: 6px; padding: 10px 14px; font-family: 'DM Mono', monospace; font-size: 11px; color: var(--green); margin: 8px 0; white-space: pre-wrap; word-break: break-all; }
+  .setup-btn { background: #f87171; border: none; color: #fff; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 12px; padding: 8px 16px; border-radius: 6px; cursor: pointer; margin-top: 10px; }
+
   .empty-state { text-align: center; padding: 40px 20px; color: var(--text-dim); font-size: 13px; }
   .empty-icon { font-size: 36px; margin-bottom: 10px; opacity: 0.3; }
-
-  /* LOADING STATE */
-  .loading-state {
-    text-align: center; padding: 40px 20px;
-    color: var(--text-dim); font-size: 13px;
-  }
+  .loading-state { text-align: center; padding: 40px 20px; color: var(--text-dim); font-size: 13px; }
   .loading-dots { display: inline-flex; gap: 4px; margin-bottom: 12px; }
-  .loading-dots span {
-    width: 8px; height: 8px; border-radius: 50%;
-    background: var(--orange); animation: bounce 1.2s infinite;
-  }
+  .loading-dots span { width: 8px; height: 8px; border-radius: 50%; background: var(--orange); animation: bounce 1.2s infinite; }
   .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
   .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
-  @keyframes bounce { 0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; } 40% { transform: scale(1); opacity: 1; } }
 
-  input[type=text] {
-    background: transparent; border: none; outline: none;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 12px; color: var(--text-muted); flex: 1; min-width: 0;
-  }
-  input[type=text]::placeholder { color: var(--text-dim); }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes toastIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+  @keyframes toastOut { from { opacity: 1; } to { opacity: 0; transform: translateX(20px); } }
+  @keyframes bounce { 0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; } 40% { transform: scale(1); opacity: 1; } }
 
   @media (max-width: 900px) {
     .main { grid-template-columns: 1fr; }
     .panel-left { border-right: none; border-bottom: 1px solid var(--border); }
     .metrics-grid { grid-template-columns: repeat(2, 1fr); }
     header { padding: 14px 20px; }
-    .panel-right { padding: 24px 20px; }
-    .panel-left { padding: 24px 20px; }
+    .panel-right, .panel-left { padding: 24px 20px; }
   }
 </style>
 </head>
@@ -548,7 +222,7 @@
 
 <header>
   <div class="logo">
-    <div class="logo-icon">🛍️</div>
+    <div class="logo-icon" id="logo-wrap">🛍️</div>
     <div>
       <div class="logo-text">ID Company</div>
       <div class="logo-sub">Dashboard de preços</div>
@@ -564,45 +238,23 @@
 </header>
 
 <div class="main">
-
-  <!-- LEFT: INPUTS -->
   <aside class="panel-left">
 
     <div>
       <p class="section-label">Taxas Shopee por faixa</p>
       <div class="taxa-card">
-        <div class="taxa-row" id="faixa-1">
-          <span>Até R$ 79,99</span>
-          <span class="taxa-val">20% + R$ 4,00</span>
-        </div>
-        <div class="taxa-row" id="faixa-2">
-          <span>R$ 80 – 99,99</span>
-          <span class="taxa-val">14% + R$ 16,00</span>
-        </div>
-        <div class="taxa-row" id="faixa-3">
-          <span>R$ 100 – 199,99</span>
-          <span class="taxa-val">14% + R$ 20,00</span>
-        </div>
-        <div class="taxa-row" id="faixa-4">
-          <span>Acima de R$ 200</span>
-          <span class="taxa-val">14% + R$ 26,00</span>
-        </div>
+        <div class="taxa-row" id="faixa-1"><span>Até R$ 79,99</span><span class="taxa-val">20% + R$ 4,00</span></div>
+        <div class="taxa-row" id="faixa-2"><span>R$ 80 – 99,99</span><span class="taxa-val">14% + R$ 16,00</span></div>
+        <div class="taxa-row" id="faixa-3"><span>R$ 100 – 199,99</span><span class="taxa-val">14% + R$ 20,00</span></div>
+        <div class="taxa-row" id="faixa-4"><span>Acima de R$ 200</span><span class="taxa-val">14% + R$ 26,00</span></div>
       </div>
     </div>
 
     <div>
       <p class="section-label">Custos de produção</p>
       <div class="input-group" id="prod-costs">
-        <div class="input-row">
-          <label>Custo do produto</label>
-          <span class="currency">R$</span>
-          <input type="number" min="0" step="0.01" value="25" oninput="calc()">
-        </div>
-        <div class="input-row">
-          <label>Mão de obra</label>
-          <span class="currency">R$</span>
-          <input type="number" min="0" step="0.01" value="30" oninput="calc()">
-        </div>
+        <div class="input-row"><label>Custo do produto</label><span class="currency">R$</span><input type="number" min="0" step="0.01" value="25" oninput="calc()"></div>
+        <div class="input-row"><label>Mão de obra</label><span class="currency">R$</span><input type="number" min="0" step="0.01" value="30" oninput="calc()"></div>
       </div>
       <button class="btn-add" style="margin-top:8px;width:100%" onclick="addRow('prod-costs')">+ Adicionar custo de produção</button>
     </div>
@@ -610,27 +262,15 @@
     <div>
       <p class="section-label">Embalagem &amp; acréscimos</p>
       <div class="input-group" id="pack-costs">
-        <div class="input-row">
-          <label>Embalagem / sacola</label>
-          <span class="currency">R$</span>
-          <input type="number" min="0" step="0.01" value="3" oninput="calc()">
-        </div>
-        <div class="input-row">
-          <label>Etiqueta / tag</label>
-          <span class="currency">R$</span>
-          <input type="number" min="0" step="0.01" value="1" oninput="calc()">
-        </div>
+        <div class="input-row"><label>Embalagem / sacola</label><span class="currency">R$</span><input type="number" min="0" step="0.01" value="3" oninput="calc()"></div>
+        <div class="input-row"><label>Etiqueta / tag</label><span class="currency">R$</span><input type="number" min="0" step="0.01" value="1" oninput="calc()"></div>
       </div>
       <button class="btn-add" style="margin-top:8px;width:100%" onclick="addRow('pack-costs')">+ Adicionar embalagem</button>
     </div>
 
     <div>
       <p class="section-label">Impostos sobre o lucro</p>
-      <div class="input-row">
-        <label>Imposto (%)</label>
-        <input type="number" id="imposto" min="0" max="100" step="0.1" value="0" oninput="calc()">
-        <span class="currency">%</span>
-      </div>
+      <div class="input-row"><label>Imposto (%)</label><input type="number" id="imposto" min="0" max="100" step="0.1" value="0" oninput="calc()"><span class="currency">%</span></div>
     </div>
 
     <div>
@@ -666,10 +306,9 @@
 
   </aside>
 
-  <!-- RIGHT: DASHBOARD -->
   <main class="panel-right">
 
-    <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
       <div>
         <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:700;letter-spacing:-0.5px">Resultado da Precificação</div>
         <div style="font-size:12px;color:var(--text-muted);margin-top:3px">Atualizado em tempo real conforme os custos</div>
@@ -678,75 +317,25 @@
     </div>
 
     <div class="metrics-grid">
-      <div class="metric-card orange">
-        <div class="metric-label">Valor Final de Venda</div>
-        <div class="metric-value orange" id="m-final">R$ 0,00</div>
-        <div class="metric-sub">Preço sugerido na Shopee</div>
-      </div>
-      <div class="metric-card green">
-        <div class="metric-label">Lucro por Venda</div>
-        <div class="metric-value green" id="m-lucro">R$ 0,00</div>
-        <div class="metric-sub">Após taxa e impostos</div>
-      </div>
-      <div class="metric-card yellow">
-        <div class="metric-label">Taxa Shopee</div>
-        <div class="metric-value yellow" id="m-taxa">R$ 0,00</div>
-        <div class="metric-sub" id="m-taxa-desc">— da venda</div>
-      </div>
+      <div class="metric-card orange"><div class="metric-label">Valor Final de Venda</div><div class="metric-value orange" id="m-final">R$ 0,00</div><div class="metric-sub">Preço sugerido na Shopee</div></div>
+      <div class="metric-card green"><div class="metric-label">Lucro por Venda</div><div class="metric-value green" id="m-lucro">R$ 0,00</div><div class="metric-sub">Após taxa e impostos</div></div>
+      <div class="metric-card yellow"><div class="metric-label">Taxa Shopee</div><div class="metric-value yellow" id="m-taxa">R$ 0,00</div><div class="metric-sub" id="m-taxa-desc">— da venda</div></div>
     </div>
 
     <div class="result-box">
-      <div class="result-box-header">
-        <span>Detalhamento</span>
-        <span>Valor</span>
-      </div>
-
-      <div class="result-line">
-        <span class="rl-name">Marketplace</span>
-        <span class="rl-val">Shopee</span>
-      </div>
-      <div class="result-line">
-        <span class="rl-name">Custo do produto (produção)</span>
-        <span class="rl-val" id="r-custo">R$ 0,00</span>
-      </div>
-      <div class="result-line">
-        <span class="rl-name">Acréscimo / embalagem</span>
-        <span class="rl-val" id="r-pack">R$ 0,00</span>
-      </div>
-      <div class="result-line">
-        <span class="rl-name">Custo total (base)</span>
-        <span class="rl-val" id="r-base">R$ 0,00</span>
-      </div>
-      <div class="result-line highlight-orange">
-        <span class="rl-name">Taxa da plataforma aplicada</span>
-        <span class="rl-val" id="r-taxa-desc">—</span>
-      </div>
-      <div class="result-line highlight-orange">
-        <span class="rl-name">Valor da taxa (R$)</span>
-        <span class="rl-val" id="r-taxa-val">R$ 0,00</span>
-      </div>
-      <div class="result-line">
-        <span class="rl-name">Impostos (%)</span>
-        <span class="rl-val" id="r-imp">0,00%</span>
-      </div>
-      <div class="result-line">
-        <span class="rl-name">Margem de lucro</span>
-        <span class="rl-val" id="r-margin">20,00%</span>
-      </div>
-      <div class="result-line">
-        <span class="rl-name">Faixa de taxa ativa</span>
-        <span class="rl-val" id="r-faixa" style="color:var(--orange)">—</span>
-      </div>
-
+      <div class="result-box-header"><span>Detalhamento</span><span>Valor</span></div>
+      <div class="result-line"><span class="rl-name">Marketplace</span><span class="rl-val">Shopee</span></div>
+      <div class="result-line"><span class="rl-name">Custo do produto (produção)</span><span class="rl-val" id="r-custo">R$ 0,00</span></div>
+      <div class="result-line"><span class="rl-name">Acréscimo / embalagem</span><span class="rl-val" id="r-pack">R$ 0,00</span></div>
+      <div class="result-line"><span class="rl-name">Custo total (base)</span><span class="rl-val" id="r-base">R$ 0,00</span></div>
+      <div class="result-line highlight-orange"><span class="rl-name">Taxa da plataforma aplicada</span><span class="rl-val" id="r-taxa-desc">—</span></div>
+      <div class="result-line highlight-orange"><span class="rl-name">Valor da taxa (R$)</span><span class="rl-val" id="r-taxa-val">R$ 0,00</span></div>
+      <div class="result-line"><span class="rl-name">Impostos (%)</span><span class="rl-val" id="r-imp">0,00%</span></div>
+      <div class="result-line"><span class="rl-name">Margem de lucro</span><span class="rl-val" id="r-margin">20,00%</span></div>
+      <div class="result-line"><span class="rl-name">Faixa de taxa ativa</span><span class="rl-val" id="r-faixa" style="color:var(--orange)">—</span></div>
       <div class="result-totals">
-        <div class="result-total-row">
-          <span class="rt-name">Valor Final</span>
-          <span class="rt-val orange" id="r-final">R$ 0,00</span>
-        </div>
-        <div class="result-total-row">
-          <span class="rt-name">Lucro por Venda</span>
-          <span class="rt-val green" id="r-lucro">R$ 0,00</span>
-        </div>
+        <div class="result-total-row"><span class="rt-name">Valor Final</span><span class="rt-val orange" id="r-final">R$ 0,00</span></div>
+        <div class="result-total-row"><span class="rt-name">Lucro por Venda</span><span class="rt-val green" id="r-lucro">R$ 0,00</span></div>
       </div>
     </div>
 
@@ -755,23 +344,45 @@
 
 <!-- PRODUTOS SALVOS -->
 <div class="produtos-section" id="produtos-section">
+
+  <!-- painel de instrução para criar tabela se erro -->
+  <div class="setup-panel" id="setup-panel">
+    <div class="setup-title">⚠️ Tabela não encontrada no Supabase</div>
+    <p class="setup-step">Execute o SQL abaixo no Supabase → SQL Editor para criar a tabela:</p>
+    <div class="setup-code">create table produtos (
+  id bigint generated always as identity primary key,
+  created_at timestamptz default now(),
+  nome_item text,
+  custo_produto numeric,
+  embalagem_acrescimos numeric,
+  taxa_plataforma numeric,
+  impostos_percentual numeric,
+  margem_lucro_percentual numeric,
+  valor_final numeric,
+  lucro_venda numeric,
+  foto_url text
+);
+
+-- Habilitar acesso público (RLS off ou policy)
+alter table produtos enable row level security;
+create policy "acesso publico" on produtos for all using (true) with check (true);</div>
+    <button class="setup-btn" onclick="document.getElementById('setup-panel').classList.remove('visible');carregarProdutos()">✓ Já criei a tabela — tentar novamente</button>
+  </div>
+
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
     <div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;letter-spacing:-0.3px">Produtos Salvos</div>
     <div style="display:flex;align-items:center;gap:10px">
       <span style="font-size:12px;color:var(--text-dim)" id="count-label">0 produtos</span>
-      <button onclick="carregarProdutos()" style="background:var(--surface2);border:1px solid var(--border2);color:var(--text-muted);font-size:11px;padding:4px 10px;border-radius:6px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s" onmouseover="this.style.borderColor='var(--orange)';this.style.color='var(--orange)'" onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--text-muted)'">↻ Atualizar</button>
+      <button onclick="carregarProdutos()" style="background:var(--surface2);border:1px solid var(--border2);color:var(--text-muted);font-size:11px;padding:4px 10px;border-radius:6px;cursor:pointer;font-family:'DM Sans',sans-serif">↻ Atualizar</button>
     </div>
   </div>
-  <div style="font-size:12px;color:var(--text-muted);margin-bottom:20px">Dados sincronizados com o Supabase em tempo real</div>
+  <div style="font-size:12px;color:var(--text-muted);margin-bottom:20px">Dados sincronizados com Supabase — compartilhe o link e todos veem os mesmos produtos</div>
   <div class="produtos-grid" id="produtos-grid">
-    <div class="loading-state">
-      <div class="loading-dots"><span></span><span></span><span></span></div>
-      <div>Carregando produtos...</div>
-    </div>
+    <div class="loading-state"><div class="loading-dots"><span></span><span></span><span></span></div><div>Carregando...</div></div>
   </div>
 </div>
 
-<!-- MODAL DETALHES -->
+<!-- MODAL -->
 <div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
   <div class="modal-box">
     <div class="modal-header">
@@ -783,108 +394,52 @@
   </div>
 </div>
 
-<!-- TOAST CONTAINER -->
 <div class="toast-container" id="toast-container"></div>
 
 <script>
-  // ============================================================
-  // SUPABASE — REST API DIRETA (sem SDK, sem CORS issues)
-  // ============================================================
-  const SUPABASE_URL  = 'https://uvgspomojfcrvfiqsot.supabase.co';
-  const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV2Z3Nwb21vanRjZnJ2Zmlxc290Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY2MTgxMDQsImV4cCI6MjA5MjE5NDEwNH0.EmZTLCApMT0AAHZAOn40mVUl3BWK8SillokW7FOEuaA';
-  const TABLE_NAME    = 'produtos';
-  const BASE_URL      = `${SUPABASE_URL}/rest/v1/${TABLE_NAME}`;
-
-  const HEADERS = {
-    'apikey':        SUPABASE_KEY,
-    'Authorization': `Bearer ${SUPABASE_KEY}`,
-    'Content-Type':  'application/json',
-    'Prefer':        'return=representation',
+  // ── SUPABASE CONFIG (URL corrigida) ──────────────────────────
+  const SUPA_URL = 'https://uvgspomojtcfrvfiqsot.supabase.co';
+  const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV2Z3Nwb21vanRjZnJ2Zmlxc290Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY2MTgxMDQsImV4cCI6MjA5MjE5NDEwNH0.EmZTLCApMT0AAHZAOn40mVUl3BWK8SillokW7FOEuaA';
+  const TABLE   = 'produtos';
+  const API     = `${SUPA_URL}/rest/v1/${TABLE}`;
+  const HDRS    = {
+    'apikey': SUPA_KEY,
+    'Authorization': `Bearer ${SUPA_KEY}`,
+    'Content-Type': 'application/json',
+    'Prefer': 'return=representation',
   };
 
-  // ── helpers REST ─────────────────────────────────────────────
-  async function sbSelect(query = '') {
-    const res = await fetch(`${BASE_URL}?${query}&order=created_at.desc`, {
-      method: 'GET', headers: HEADERS,
-    });
+  async function sbFetch(url, opts = {}) {
+    const res = await fetch(url, { headers: HDRS, ...opts });
     if (!res.ok) {
-      const err = await res.json().catch(() => ({ message: res.statusText }));
-      throw new Error(err.message || res.statusText);
+      let msg = res.statusText;
+      try { const j = await res.json(); msg = j.message || j.hint || j.error || msg; } catch {}
+      throw new Error(`[${res.status}] ${msg}`);
     }
-    return res.json();
+    const text = await res.text();
+    return text ? JSON.parse(text) : [];
   }
 
-  async function sbInsert(payload) {
-    const res = await fetch(BASE_URL, {
-      method: 'POST',
-      headers: HEADERS,
-      body: JSON.stringify(payload),
-    });
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({ message: res.statusText }));
-      throw new Error(err.message || res.statusText);
-    }
-    return res.json();
-  }
-
-  async function sbDelete(id) {
-    const res = await fetch(`${BASE_URL}?id=eq.${id}`, {
-      method: 'DELETE', headers: HEADERS,
-    });
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({ message: res.statusText }));
-      throw new Error(err.message || res.statusText);
-    }
-    return true;
-  }
-
-  // ============================================================
-  // TOAST SYSTEM
-  // ============================================================
-  function showToast(title, body, type = 'info', duration = 4000) {
+  // ── TOAST ────────────────────────────────────────────────────
+  function showToast(title, body, type = 'info', ms = 4500) {
     const icons = { success: '✓', error: '✕', info: 'ℹ' };
-    const container = document.getElementById('toast-container');
-    const toast = document.createElement('div');
-    toast.className = `toast ${type}`;
-    toast.innerHTML = `
-      <span class="toast-icon">${icons[type]}</span>
-      <div class="toast-msg">
-        <div class="toast-title">${title}</div>
-        ${body ? `<div class="toast-body">${body}</div>` : ''}
-      </div>
-    `;
-    container.appendChild(toast);
-    setTimeout(() => {
-      toast.style.animation = 'toastOut 0.3s ease forwards';
-      setTimeout(() => toast.remove(), 300);
-    }, duration);
+    const el = document.createElement('div');
+    el.className = `toast ${type}`;
+    el.innerHTML = `<span class="toast-icon">${icons[type]}</span><div class="toast-msg"><div class="toast-title">${title}</div>${body ? `<div class="toast-body">${body}</div>` : ''}</div>`;
+    document.getElementById('toast-container').appendChild(el);
+    setTimeout(() => { el.style.animation = 'toastOut 0.3s ease forwards'; setTimeout(() => el.remove(), 300); }, ms);
   }
 
-  // ============================================================
-  // CONNECTION STATUS
-  // ============================================================
+  // ── STATUS ───────────────────────────────────────────────────
   function setStatus(state, text) {
     const el = document.getElementById('supabase-status');
     const dot = el.querySelector('.status-dot');
     document.getElementById('status-text').textContent = text;
     el.className = `supabase-status ${state}`;
-    if (state === 'connected') dot.classList.add('pulse');
-    else dot.classList.remove('pulse');
+    dot.className = 'status-dot' + (state === 'connected' ? ' pulse' : '');
   }
 
-  async function testConnection() {
-    try {
-      await sbSelect('select=id&limit=1');
-      setStatus('connected', 'Supabase conectado');
-    } catch (e) {
-      setStatus('error', 'Erro de conexão');
-      showToast('Erro de conexão', e.message || 'Não foi possível conectar ao Supabase', 'error', 6000);
-    }
-  }
-
-  // ============================================================
-  // CALCULATOR
-  // ============================================================
+  // ── CALCULATOR ───────────────────────────────────────────────
   const faixas = [
     { id: 'faixa-1', max: 79.99,    pct: 0.20, fixo: 4.00,  label: 'Até R$ 79,99'    },
     { id: 'faixa-2', max: 99.99,    pct: 0.14, fixo: 16.00, label: 'R$ 80 – 99,99'   },
@@ -892,115 +447,68 @@
     { id: 'faixa-4', max: Infinity, pct: 0.14, fixo: 26.00, label: 'Acima de R$ 200' },
   ];
 
-  let photoDataURL = null;
-  let produtos = [];
-  let ultimoResultado = {};
+  let photoDataURL = null, produtos = [], ultimoResultado = {};
 
-  function fmt(v) { return 'R$ ' + v.toFixed(2).replace('.', ','); }
-  function fmtP(v) { return v.toFixed(2).replace('.', ',') + '%'; }
-
-  function sumGroup(id) {
-    return Array.from(document.querySelectorAll('#' + id + ' input[type=number]'))
-      .reduce((a, el) => a + (parseFloat(el.value) || 0), 0);
-  }
+  const fmt  = v => 'R$ ' + v.toFixed(2).replace('.', ',');
+  const fmtP = v => v.toFixed(2).replace('.', ',') + '%';
+  const sumG = id => Array.from(document.querySelectorAll(`#${id} input[type=number]`)).reduce((a,el)=>a+(parseFloat(el.value)||0),0);
 
   function calc() {
-    const prod = sumGroup('prod-costs');
-    const pack = sumGroup('pack-costs');
-    const base = prod + pack;
-    const margem = (parseFloat(document.getElementById('margin-slider').value) || 0) / 100;
-    const impostoRate = (parseFloat(document.getElementById('imposto').value) || 0) / 100;
-
-    let precoFinal = 0, faixaUsada = null, taxaValor = 0;
-    for (let i = 0; i < faixas.length; i++) {
-      const f = faixas[i];
-      const denom = 1 - f.pct;
-      const num = base * (1 + margem * (1 + impostoRate)) + f.fixo;
-      const tent = denom > 0 ? num / denom : num;
-      if (tent <= f.max || i === faixas.length - 1) {
-        precoFinal = tent;
-        faixaUsada = f;
-        taxaValor = precoFinal * f.pct + f.fixo;
-        break;
-      }
+    const prod = sumG('prod-costs'), pack = sumG('pack-costs'), base = prod + pack;
+    const margem = (parseFloat(document.getElementById('margin-slider').value)||0)/100;
+    const impostoRate = (parseFloat(document.getElementById('imposto').value)||0)/100;
+    let precoFinal=0, faixaUsada=null, taxaValor=0;
+    for (let i=0; i<faixas.length; i++) {
+      const f=faixas[i], num=base*(1+margem*(1+impostoRate))+f.fixo, tent=(1-f.pct)>0?num/(1-f.pct):num;
+      if (tent<=f.max||i===faixas.length-1) { precoFinal=tent; faixaUsada=f; taxaValor=precoFinal*f.pct+f.fixo; break; }
     }
-
-    const lucro = base * margem;
-    const imposto = lucro * impostoRate;
-    const lucroLiq = lucro - imposto;
-
+    const lucroLiq = base*margem - base*margem*impostoRate;
     ultimoResultado = { prod, pack, base, margem, impostoRate, precoFinal, taxaValor, lucroLiq, faixaUsada };
-
     document.getElementById('m-final').textContent = fmt(precoFinal);
     document.getElementById('m-lucro').textContent = fmt(lucroLiq);
     document.getElementById('m-taxa').textContent = fmt(taxaValor);
-    document.getElementById('m-taxa-desc').textContent = faixaUsada
-      ? fmtP(faixaUsada.pct * 100) + ' + fixo R$ ' + faixaUsada.fixo.toFixed(2).replace('.', ',') : '—';
+    document.getElementById('m-taxa-desc').textContent = faixaUsada ? fmtP(faixaUsada.pct*100)+' + fixo R$ '+faixaUsada.fixo.toFixed(2).replace('.',',') : '—';
     document.getElementById('r-custo').textContent = fmt(prod);
     document.getElementById('r-pack').textContent = fmt(pack);
     document.getElementById('r-base').textContent = fmt(base);
-    document.getElementById('r-taxa-desc').textContent = faixaUsada
-      ? fmtP(faixaUsada.pct * 100) + ' + R$ ' + faixaUsada.fixo.toFixed(2).replace('.', ',') : '—';
+    document.getElementById('r-taxa-desc').textContent = faixaUsada ? fmtP(faixaUsada.pct*100)+' + R$ '+faixaUsada.fixo.toFixed(2).replace('.',',') : '—';
     document.getElementById('r-taxa-val').textContent = fmt(taxaValor);
-    document.getElementById('r-imp').textContent = fmtP(impostoRate * 100);
-    document.getElementById('r-margin').textContent = fmtP(margem * 100);
-    document.getElementById('r-faixa').textContent = faixaUsada ? faixaUsada.label : '—';
+    document.getElementById('r-imp').textContent = fmtP(impostoRate*100);
+    document.getElementById('r-margin').textContent = fmtP(margem*100);
+    document.getElementById('r-faixa').textContent = faixaUsada?.label || '—';
     document.getElementById('r-final').textContent = fmt(precoFinal);
     document.getElementById('r-lucro').textContent = fmt(lucroLiq);
-    document.getElementById('r-faixa-pill').textContent = faixaUsada ? faixaUsada.label : '—';
-
-    faixas.forEach(f => {
-      const el = document.getElementById(f.id);
-      if (el) el.classList.toggle('ativa', faixaUsada && f.id === faixaUsada.id);
-    });
+    document.getElementById('r-faixa-pill').textContent = faixaUsada?.label || '—';
+    faixas.forEach(f => { const el=document.getElementById(f.id); if(el) el.classList.toggle('ativa', faixaUsada?.id===f.id); });
   }
 
   function syncMargin(from) {
-    const slider = document.getElementById('margin-slider');
-    const input = document.getElementById('margin-input');
-    const display = document.getElementById('slider-display');
-    if (from === 'slider') input.value = slider.value;
-    else slider.value = Math.min(200, Math.max(1, parseFloat(input.value) || 1));
-    display.textContent = slider.value + '%';
-    calc();
+    const s=document.getElementById('margin-slider'), inp=document.getElementById('margin-input');
+    if(from==='slider') inp.value=s.value; else s.value=Math.min(200,Math.max(1,parseFloat(inp.value)||1));
+    document.getElementById('slider-display').textContent=s.value+'%'; calc();
   }
 
-  function addRow(containerId) {
-    const group = document.getElementById(containerId);
-    const div = document.createElement('div');
-    div.className = 'input-row';
-    div.innerHTML = `
-      <input type="text" placeholder="Descrição do custo" style="flex:1;min-width:0;background:transparent;border:none;outline:none;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--text-muted)">
-      <span class="currency">R$</span>
-      <input type="number" min="0" step="0.01" value="0" oninput="calc()">
-      <button class="btn-remove" onclick="removeRow(this)" title="Remover">✕</button>
-    `;
-    group.appendChild(div);
-    div.querySelector('input[type=number]').focus();
-    calc();
+  function addRow(cid) {
+    const d=document.createElement('div'); d.className='input-row';
+    d.innerHTML=`<input type="text" placeholder="Descrição" style="flex:1;min-width:0;background:transparent;border:none;outline:none;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--text-muted)"><span class="currency">R$</span><input type="number" min="0" step="0.01" value="0" oninput="calc()"><button class="btn-remove" onclick="removeRow(this)">✕</button>`;
+    document.getElementById(cid).appendChild(d); d.querySelector('input[type=number]').focus(); calc();
   }
 
   function removeRow(btn) { btn.closest('.input-row').remove(); calc(); }
 
-  // ============================================================
-  // FOTO
-  // ============================================================
+  // ── FOTO ─────────────────────────────────────────────────────
   function onPhotoChange(e) {
-    const file = e.target.files[0];
-    if (!file) return;
-    // Compress para Base64 (max ~200kb para não explodir o Supabase)
+    const file = e.target.files[0]; if (!file) return;
     const reader = new FileReader();
-    reader.onload = (ev) => {
+    reader.onload = ev => {
       const img = new Image();
       img.onload = () => {
         const canvas = document.createElement('canvas');
-        const MAX = 600;
-        let w = img.width, h = img.height;
-        if (w > h) { if (w > MAX) { h = h * MAX / w; w = MAX; } }
-        else { if (h > MAX) { w = w * MAX / h; h = MAX; } }
-        canvas.width = w; canvas.height = h;
-        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-        photoDataURL = canvas.toDataURL('image/jpeg', 0.7);
+        const MAX=600; let w=img.width, h=img.height;
+        if(w>h){if(w>MAX){h=h*MAX/w;w=MAX;}}else{if(h>MAX){w=w*MAX/h;h=MAX;}}
+        canvas.width=w; canvas.height=h;
+        canvas.getContext('2d').drawImage(img,0,0,w,h);
+        photoDataURL = canvas.toDataURL('image/jpeg',0.7);
         document.getElementById('preview-img').src = photoDataURL;
         document.getElementById('preview-img').style.display = 'block';
         document.getElementById('photo-zone').classList.add('has-img');
@@ -1011,228 +519,136 @@
   }
 
   function removePhoto(e) {
-    e && e.stopPropagation();
-    photoDataURL = null;
-    const img = document.getElementById('preview-img');
-    img.src = ''; img.style.display = 'none';
+    e&&e.stopPropagation(); photoDataURL=null;
+    document.getElementById('preview-img').src='';
+    document.getElementById('preview-img').style.display='none';
     document.getElementById('photo-zone').classList.remove('has-img');
-    document.getElementById('photo-input').value = '';
+    document.getElementById('photo-input').value='';
   }
 
-  // ============================================================
-  // SALVAR PRODUTO → SUPABASE
-  // ============================================================
+  // ── SALVAR ───────────────────────────────────────────────────
   async function salvarProduto() {
     const r = ultimoResultado;
-    if (!r.precoFinal) {
-      showToast('Atenção', 'Calcule os custos antes de salvar.', 'error');
-      return;
-    }
-
+    if (!r.precoFinal) { showToast('Atenção','Calcule os custos antes de salvar.','error'); return; }
     const nome = document.getElementById('nome-produto').value.trim() || 'Produto sem nome';
     const btn = document.getElementById('btn-salvar');
-    btn.classList.add('loading');
-    btn.disabled = true;
-
+    btn.classList.add('loading'); btn.disabled=true;
     try {
-      const payload = {
-        nome_item:              nome,
-        custo_produto:          parseFloat(r.prod.toFixed(2)),
-        embalagem_acrescimos:   parseFloat(r.pack.toFixed(2)),
-        taxa_plataforma:        parseFloat(r.taxaValor.toFixed(2)),
-        impostos_percentual:    parseFloat((r.impostoRate * 100).toFixed(2)),
-        margem_lucro_percentual: parseFloat((r.margem * 100).toFixed(2)),
-        valor_final:            parseFloat(r.precoFinal.toFixed(2)),
-        lucro_venda:            parseFloat(r.lucroLiq.toFixed(2)),
-        foto_url:               photoDataURL || null,
-      };
-
-      await sbInsert(payload);
-
-      showToast('Produto salvo!', `"${nome}" foi salvo no Supabase com sucesso.`, 'success');
-      document.getElementById('nome-produto').value = '';
-      removePhoto();
+      await sbFetch(API, {
+        method:'POST',
+        body: JSON.stringify({
+          nome_item: nome,
+          custo_produto: +r.prod.toFixed(2),
+          embalagem_acrescimos: +r.pack.toFixed(2),
+          taxa_plataforma: +r.taxaValor.toFixed(2),
+          impostos_percentual: +(r.impostoRate*100).toFixed(2),
+          margem_lucro_percentual: +(r.margem*100).toFixed(2),
+          valor_final: +r.precoFinal.toFixed(2),
+          lucro_venda: +r.lucroLiq.toFixed(2),
+          foto_url: photoDataURL || null,
+        })
+      });
+      showToast('Produto salvo!',`"${nome}" salvo com sucesso.`,'success');
+      document.getElementById('nome-produto').value=''; removePhoto();
       await carregarProdutos();
-      document.getElementById('produtos-section').scrollIntoView({ behavior: 'smooth' });
-
-    } catch (err) {
-      console.error('Erro ao salvar:', err);
-      showToast('Erro ao salvar', err.message || 'Não foi possível salvar no Supabase.', 'error', 6000);
-    } finally {
-      btn.classList.remove('loading');
-      btn.disabled = false;
-    }
+      document.getElementById('produtos-section').scrollIntoView({behavior:'smooth'});
+    } catch(err) {
+      console.error(err);
+      const isTable = err.message.includes('42P01') || err.message.includes('relation') || err.message.includes('does not exist');
+      if(isTable) {
+        document.getElementById('setup-panel').classList.add('visible');
+        showToast('Tabela não existe','Crie a tabela no Supabase conforme as instruções abaixo.','error',8000);
+      } else {
+        showToast('Erro ao salvar', err.message,'error',6000);
+      }
+    } finally { btn.classList.remove('loading'); btn.disabled=false; }
   }
 
-  // ============================================================
-  // CARREGAR PRODUTOS ← SUPABASE
-  // ============================================================
+  // ── CARREGAR ─────────────────────────────────────────────────
   async function carregarProdutos() {
     const grid = document.getElementById('produtos-grid');
-    grid.innerHTML = `
-      <div class="loading-state">
-        <div class="loading-dots"><span></span><span></span><span></span></div>
-        <div>Carregando do Supabase...</div>
-      </div>`;
-
+    grid.innerHTML = `<div class="loading-state"><div class="loading-dots"><span></span><span></span><span></span></div><div>Carregando...</div></div>`;
     try {
-      const data = await sbSelect('select=*');
-      produtos = data || [];
+      produtos = await sbFetch(`${API}?select=*&order=created_at.desc`);
+      document.getElementById('setup-panel').classList.remove('visible');
       renderProdutos();
-    } catch (err) {
-      console.error('Erro ao carregar:', err);
-      grid.innerHTML = `
-        <div class="empty-state">
-          <div class="empty-icon">⚠️</div>
-          Erro ao carregar produtos.<br>
-          <span style="font-size:11px;color:var(--text-dim)">${err.message}</span>
-        </div>`;
-      showToast('Erro ao carregar', err.message, 'error');
+      setStatus('connected','Supabase conectado');
+    } catch(err) {
+      console.error(err);
+      const isTable = err.message.includes('42P01')||err.message.includes('relation')||err.message.includes('does not exist');
+      if(isTable) {
+        document.getElementById('setup-panel').classList.add('visible');
+        grid.innerHTML=`<div class="empty-state"><div class="empty-icon">🗄️</div>Crie a tabela no Supabase primeiro.<br><span style="font-size:11px">Veja as instruções acima.</span></div>`;
+        setStatus('error','Tabela não encontrada');
+      } else {
+        grid.innerHTML=`<div class="empty-state"><div class="empty-icon">⚠️</div>Erro ao carregar:<br><span style="font-size:11px;color:var(--text-dim)">${err.message}</span></div>`;
+        setStatus('error','Erro de conexão');
+        showToast('Erro ao carregar',err.message,'error',6000);
+      }
     }
   }
 
-  // ============================================================
-  // DELETAR PRODUTO ← SUPABASE
-  // ============================================================
+  // ── DELETAR ──────────────────────────────────────────────────
   async function deletarProduto(id) {
-    if (!confirm('Remover este produto do Supabase?')) return;
+    if(!confirm('Remover este produto?')) return;
     try {
-      await sbDelete(id);
-      showToast('Removido', 'Produto removido do Supabase.', 'success');
+      await sbFetch(`${API}?id=eq.${id}`,{method:'DELETE'});
+      showToast('Removido','Produto removido.','success');
       await carregarProdutos();
-    } catch (err) {
-      showToast('Erro ao remover', err.message, 'error');
-    }
+    } catch(err) { showToast('Erro ao remover',err.message,'error'); }
   }
 
-  // ============================================================
-  // RENDER CARDS
-  // ============================================================
+  // ── RENDER ───────────────────────────────────────────────────
   function renderProdutos() {
-    const grid = document.getElementById('produtos-grid');
-    const count = document.getElementById('count-label');
-    count.textContent = produtos.length + ' produto' + (produtos.length !== 1 ? 's' : '');
-
-    if (produtos.length === 0) {
-      grid.innerHTML = `
-        <div class="empty-state">
-          <div class="empty-icon">📦</div>
-          Nenhum produto salvo ainda.<br>
-          Preencha os custos e clique em "Salvar produto".
-        </div>`;
+    const grid=document.getElementById('produtos-grid');
+    document.getElementById('count-label').textContent=produtos.length+' produto'+(produtos.length!==1?'s':'');
+    if(!produtos.length) {
+      grid.innerHTML=`<div class="empty-state"><div class="empty-icon">📦</div>Nenhum produto salvo ainda.<br>Preencha os custos e clique em "Salvar produto".</div>`;
       return;
     }
-
-    grid.innerHTML = produtos.map(p => `
+    grid.innerHTML=produtos.map(p=>`
       <div class="produto-card" onclick="abrirModal(${p.id})">
-        <div class="produto-card-img">
-          ${p.foto_url ? `<img src="${p.foto_url}" alt="${p.nome_item || ''}">` : '📷'}
-        </div>
+        <div class="produto-card-img">${p.foto_url?`<img src="${p.foto_url}" alt="${p.nome_item||''}">` :'📷'}</div>
         <div class="produto-card-body">
-          <div class="produto-card-nome">${p.nome_item || 'Sem nome'}</div>
+          <div class="produto-card-nome">${p.nome_item||'Sem nome'}</div>
           <div class="produto-card-vals">
-            <div class="produto-card-row destaque">
-              <span class="pk-label">Preço de venda</span>
-              <span class="pk-val">${fmt(p.valor_final || 0)}</span>
-            </div>
-            <div class="produto-card-row lucro">
-              <span class="pk-label">Lucro</span>
-              <span class="pk-val">${fmt(p.lucro_venda || 0)}</span>
-            </div>
-            <div class="produto-card-row">
-              <span class="pk-label">Taxa Shopee</span>
-              <span class="pk-val">${fmt(p.taxa_plataforma || 0)}</span>
-            </div>
+            <div class="produto-card-row destaque"><span class="pk-label">Preço de venda</span><span class="pk-val">${fmt(p.valor_final||0)}</span></div>
+            <div class="produto-card-row lucro"><span class="pk-label">Lucro</span><span class="pk-val">${fmt(p.lucro_venda||0)}</span></div>
+            <div class="produto-card-row"><span class="pk-label">Taxa Shopee</span><span class="pk-val">${fmt(p.taxa_plataforma||0)}</span></div>
           </div>
-          <div class="source-badge cloud">☁ Supabase</div>
+          <div class="source-badge">☁ Supabase</div>
         </div>
         <div class="produto-card-footer">
           <button class="btn-card-action" onclick="event.stopPropagation();abrirModal(${p.id})">Ver detalhes</button>
           <button class="btn-card-action del" onclick="event.stopPropagation();deletarProduto(${p.id})">Remover</button>
         </div>
-      </div>
-    `).join('');
+      </div>`).join('');
   }
 
-  // ============================================================
-  // MODAL DETALHES
-  // ============================================================
+  // ── MODAL ────────────────────────────────────────────────────
   function abrirModal(id) {
-    const p = produtos.find(x => x.id === id);
-    if (!p) return;
-    document.getElementById('modal-nome').textContent = p.nome_item || 'Produto';
-    const imgWrap = document.getElementById('modal-img-wrap');
-    imgWrap.innerHTML = p.foto_url ? `<img src="${p.foto_url}" alt="${p.nome_item}">` : '📷';
-
-    const createdAt = p.created_at
-      ? new Date(p.created_at).toLocaleString('pt-BR')
-      : '—';
-
-    document.getElementById('modal-body').innerHTML = `
-      <div class="modal-row">
-        <span class="ml">Custo do produto</span>
-        <span class="mv">${fmt(p.custo_produto || 0)}</span>
-      </div>
-      <div class="modal-row">
-        <span class="ml">Embalagem / acréscimos</span>
-        <span class="mv">${fmt(p.embalagem_acrescimos || 0)}</span>
-      </div>
-      <div class="modal-row">
-        <span class="ml">Taxa da plataforma</span>
-        <span class="mv">${fmt(p.taxa_plataforma || 0)}</span>
-      </div>
-      <div class="modal-row">
-        <span class="ml">Impostos</span>
-        <span class="mv">${(p.impostos_percentual || 0).toFixed(2).replace('.',',')}%</span>
-      </div>
-      <div class="modal-row">
-        <span class="ml">Margem de lucro</span>
-        <span class="mv">${(p.margem_lucro_percentual || 0).toFixed(2).replace('.',',')}%</span>
-      </div>
-      <div class="modal-row final">
-        <span class="ml">Valor Final</span>
-        <span class="mv">${fmt(p.valor_final || 0)}</span>
-      </div>
-      <div class="modal-row lucro">
-        <span class="ml">Lucro por venda</span>
-        <span class="mv">${fmt(p.lucro_venda || 0)}</span>
-      </div>
-      <div class="modal-row">
-        <span class="ml">Salvo em</span>
-        <span class="mv" style="font-size:11px;color:var(--text-muted)">${createdAt}</span>
-      </div>
-      <div class="modal-row">
-        <span class="ml">ID Supabase</span>
-        <span class="mv" style="font-size:10px;color:var(--text-dim)">${p.id}</span>
-      </div>
-    `;
+    const p=produtos.find(x=>x.id===id); if(!p) return;
+    document.getElementById('modal-nome').textContent=p.nome_item||'Produto';
+    document.getElementById('modal-img-wrap').innerHTML=p.foto_url?`<img src="${p.foto_url}" alt="${p.nome_item}">`:'📷';
+    document.getElementById('modal-body').innerHTML=`
+      <div class="modal-row"><span class="ml">Custo do produto</span><span class="mv">${fmt(p.custo_produto||0)}</span></div>
+      <div class="modal-row"><span class="ml">Embalagem / acréscimos</span><span class="mv">${fmt(p.embalagem_acrescimos||0)}</span></div>
+      <div class="modal-row"><span class="ml">Taxa da plataforma</span><span class="mv">${fmt(p.taxa_plataforma||0)}</span></div>
+      <div class="modal-row"><span class="ml">Impostos</span><span class="mv">${(p.impostos_percentual||0).toFixed(2).replace('.',',')}%</span></div>
+      <div class="modal-row"><span class="ml">Margem de lucro</span><span class="mv">${(p.margem_lucro_percentual||0).toFixed(2).replace('.',',')}%</span></div>
+      <div class="modal-row final"><span class="ml">Valor Final</span><span class="mv">${fmt(p.valor_final||0)}</span></div>
+      <div class="modal-row lucro"><span class="ml">Lucro por venda</span><span class="mv">${fmt(p.lucro_venda||0)}</span></div>
+      <div class="modal-row"><span class="ml">Salvo em</span><span class="mv" style="font-size:11px;color:var(--text-muted)">${p.created_at?new Date(p.created_at).toLocaleString('pt-BR'):'—'}</span></div>`;
     document.getElementById('modal-overlay').classList.add('open');
   }
 
   function fecharModal() { document.getElementById('modal-overlay').classList.remove('open'); }
-  function closeModal(e) {
-    if (e.target === document.getElementById('modal-overlay')) fecharModal();
-  }
+  function closeModal(e) { if(e.target===document.getElementById('modal-overlay')) fecharModal(); }
 
-  // Polling a cada 30s como fallback (Realtime requer WebSocket/SDK)
-  function setupRealtime() {
-    setInterval(() => {
-      carregarProdutos();
-    }, 30000);
-  }
-
-  // ============================================================
-  // INIT
-  // ============================================================
-  async function init() {
-    setStatus('', 'Conectando...');
-    calc();
-    await testConnection();
-    await carregarProdutos();
-    setupRealtime();
-  }
-
-  init();
+  // ── INIT ─────────────────────────────────────────────────────
+  calc();
+  carregarProdutos();
+  setInterval(carregarProdutos, 30000); // atualiza a cada 30s
 </script>
 </body>
 </html>
