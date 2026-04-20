@@ -1224,15 +1224,15 @@
       const { data: urlData } = supabase.storage.from('produtos').getPublicUrl(fileName);
       const fotoUrl = urlData.publicUrl;
 
-      // 3. Salvar Dados
+     // 3. Salvar Dados na tabela 'calculos' com os nomes das suas colunas
       const { error: dbError } = await supabase
         .from('calculos')
         .insert([{
-          nome: nome,
-          custo: parseFloat(v_custo),
-          venda: parseFloat(v_venda),
+          nome_item: nome, 
+          custo_produto: parseFloat(v_custo),
+          valor_final: parseFloat(v_venda),
           foto_url: fotoUrl,
-          data_criacao: new Date()
+          created_at: new Date()
         }]);
 
       if (dbError) throw dbError;
